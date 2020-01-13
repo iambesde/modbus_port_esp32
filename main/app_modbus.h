@@ -5,7 +5,7 @@
 #include "mbport.h"
 #include "mbutils.h"
 #include "app_ac_dev.h"
-
+#include "esp_event_loop.h"
 /* -----------------------Master Defines -------------------------------------*/
 #define M_DISCRETE_INPUT_START 10000
 #define M_DISCRETE_INPUT_NDISCRETES 128*16
@@ -27,7 +27,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+void vlwIPInit(void);
 int descret_event_gp_bit_clear();
 
 int input_reg_event_gp_bit_clear();

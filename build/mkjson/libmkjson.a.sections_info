@@ -1,0 +1,48 @@
+In archive /home/intellexus/esp/esp32-tutorial_old/Project/MODBUS_MASTER/modbus_port_esp32/build/mkjson/libmkjson.a:
+
+mkjson.o:     file format elf32-xtensa-le
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .literal.allsprintf 00000010  00000000  00000000  00000034  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  1 .literal.mkjson 00000074  00000000  00000000  00000044  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  2 .text         00000000  00000000  00000000  000000b8  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  3 .data         00000000  00000000  00000000  000000b8  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  4 .bss          00000000  00000000  00000000  000000b8  2**0
+                  ALLOC
+  5 .text.allsprintf 00000067  00000000  00000000  000000b8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  6 .rodata.str1.4 0000005b  00000000  00000000  00000120  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .text.mkjson  00000435  00000000  00000000  0000017c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  8 .rodata.mkjson 000000c0  00000000  00000000  000005b4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+  9 .debug_frame  00000040  00000000  00000000  00000674  2**2
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 10 .debug_info   00000422  00000000  00000000  000006b4  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 11 .debug_abbrev 00000161  00000000  00000000  00000ad6  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_loc    000002e6  00000000  00000000  00000c37  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 13 .debug_aranges 00000028  00000000  00000000  00000f1d  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 14 .debug_ranges 00000018  00000000  00000000  00000f45  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 15 .debug_line   00000683  00000000  00000000  00000f5d  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 16 .debug_str    0000029d  00000000  00000000  000015e0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 17 .comment      0000003b  00000000  00000000  0000187d  2**0
+                  CONTENTS, READONLY
+ 18 .xtensa.info  00000038  00000000  00000000  000018b8  2**0
+                  CONTENTS, READONLY
+ 19 .xt.lit       00000010  00000000  00000000  000018f0  2**0
+                  CONTENTS, RELOC, READONLY
+ 20 .xt.prop      0000051c  00000000  00000000  00001900  2**0
+                  CONTENTS, RELOC, READONLY

@@ -4,10 +4,30 @@
 #include "freertos/event_groups.h"
 #include "esp_log.h"
 #include "port.h"
+//WIFI
+#include "esp_wifi.h"
+#include "esp_event_loop.h"
+#include <string.h>
+#include "lwip/err.h"
+#include "lwip/sys.h"
+#define MB_PORT_NUM     (502)           // Number of TCP port used for Modbus connection
+#define EXAMPLE_ESP_WIFI_SSID      "ESP_AP"
+#define EXAMPLE_ESP_WIFI_PASS      "Amvisa@123A"
+#define EXAMPLE_ESP_MAXIMUM_RETRY  10
+//static EventGroupHandle_t s_wifi_event_group;
+/* The event group allows multiple bits for each event, but we only care about one event
+ * - are we connected to the AP with an IP? */
+//const int WIFI_CONNECTED_BIT = BIT0;
+static int s_retry_num = 0;
 
 static const char *TAG = "APP_MODBUS:";
 //#define MB_LOG(...)
 #define MB_LOG(...) ESP_LOGW(__VA_ARGS__)
+#define MB_CHECK(a, ret_val, str, ...) \
+    if (!(a)) { \
+        ESP_LOGE(TAG, "%s(%u): " str, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
+        return (ret_val); \
+    }
 
 #define T_WAIT_FOREVER 3
 
@@ -36,7 +56,65 @@ static const int INPUTREG_DONE_BIT = BIT2;
 
 static EventGroupHandle_t descrete_done_event_group;
 static EventGroupHandle_t input_reg_done_event_group;
+//WIFI
+static esp_err_t event_handler(void *ctx, system_event_t *event)
+{
+    switch(event->event_id) {
+    case SYSTEM_EVENT_STA_START:
+        esp_wifi_connect();
+        break;
+    case SYSTEM_EVENT_STA_GOT_IP:
+        ESP_LOGI(TAG, "got ip:%s",ip4addr_ntoa(&event->event_info.got_ip.ip_info.ip));
+        s_retry_num = 0;
+        xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+        break;
+    case SYSTEM_EVENT_STA_DISCONNECTED:
+        {
+                esp_wifi_connect();
+            if (s_retry_num < EXAMPLE_ESP_MAXIMUM_RETRY) {
+                xEventGroupClearBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+                s_retry_num++;
+                ESP_LOGI(TAG,"retry to connect to the AP");
+            }
+            ESP_LOGI(TAG,"connect to the AP fail\n");
+            break;
+        }
+    default:
+        break;
+    }
+    return ESP_OK;
+}
 
+// An example application of Modbus slave. It is based on freemodbus stack.
+// See deviceparams.h file for more information about assigned Modbus parameters.
+// These parameters can be accessed from main application and also can be changed
+// by external Modbus master host.
+void
+vlwIPInit( void )
+{
+	s_wifi_event_group = xEventGroupCreate();
+
+	    tcpip_adapter_init();
+	    ESP_ERROR_CHECK(esp_event_loop_init(event_handler, NULL) );
+
+	    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+	    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+	    wifi_config_t wifi_config = {
+	        .sta = {
+	            .ssid = EXAMPLE_ESP_WIFI_SSID,
+	            .password = EXAMPLE_ESP_WIFI_PASS
+	        },
+	    };
+
+	    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
+	    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config) );
+	    ESP_ERROR_CHECK(esp_wifi_start() );
+
+	    ESP_LOGI(TAG, "wifi_init_sta finished.");
+	    ESP_LOGI(TAG, "connect to ap SSID:%s password:%s",
+	             EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
+
+}
 static int event_groups_create()
 {
     descrete_done_event_group = xEventGroupCreate();
@@ -404,7 +482,10 @@ int get_p_disc_buf(int i)
 void modebus_task(void *parameter)
 {
     eMBErrorCode eStatus;
-    eStatus = eMBMasterInit(MB_RTU, 2, 9600, MB_PAR_NONE); //115200
+//    eStatus = eMBMasterInit(MB_RTU, 2, 9600, MB_PAR_NONE); //115200
+    eStatus = eMBMasterTCPInit(MB_TCP_PORT_USE_DEFAULT);
+    MB_CHECK((eStatus == MB_ENOERR), ESP_ERR_INVALID_STATE,
+            "mb stack initialization failure, eMBInit() returns (0x%x).", eStatus);
     if (0 == eStatus)
     {
         MB_LOG(TAG, "eMBInit OK. eStatus: %d ", eStatus);

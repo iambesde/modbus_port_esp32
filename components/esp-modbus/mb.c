@@ -193,6 +193,34 @@ eMBMasterInit(eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity)
 	}
 	return eStatus;
 }
+eMBErrorCode
+eMBMasterTCPInit( USHORT ucTCPPort )
+{
+    eMBErrorCode    eStatus = MB_ENOERR;
+
+    if( ( eStatus = eMBTCPDoInit( ucTCPPort ) ) != MB_ENOERR )
+    {
+        eMBState = STATE_DISABLED;
+    }
+    else if( !xMBMasterPortEventInit() )
+    {
+        /* Port dependent event module initalization failed. */
+        eStatus = MB_EPORTERR;
+    }
+    else
+    {
+        pvMBMasterFrameStartCur = eMBTCPStart;
+        pvMBMasterFrameStopCur = eMBTCPStop;
+        peMBMasterFrameReceiveCur = eMBTCPReceive;
+        peMBMasterFrameSendCur = eMBTCPSend;
+        pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBTCPPortClose : NULL;
+        ucMBMasterDestAddress = MB_TCP_PSEUDO_ADDRESS;
+        //eMBCurrentMode = MB_TCP;
+        eMBState = STATE_DISABLED;
+    }
+    return eStatus;
+}
+
 
 eMBErrorCode
 eMBMasterClose(void)

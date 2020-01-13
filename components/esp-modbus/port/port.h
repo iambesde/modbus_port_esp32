@@ -29,6 +29,11 @@
 #define PR_BEGIN_EXTERN_C extern "C" {
 #define PR_END_EXTERN_C }
 
+/* DEFINES TO SUPPORT PORTTCP.C FILE VARIABLES :Shradha */
+#define INVALID_SOCKET (~0)
+#define SOCKET_ERROR (-1)
+typedef int     SOCKET;
+
 #define ENTER_CRITICAL_SECTION() vMBPortEnterCritical()
 #define EXIT_CRITICAL_SECTION() vMBPortExitCritical()
 

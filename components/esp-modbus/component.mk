@@ -12,5 +12,5 @@ COMPONENT_ADD_INCLUDEDIRS := include port
 #EXTRA_CFLAGS := -DICACHE_RODATA_ATTR
 #CFLAGS += -Wno-error=implicit-function-declaration -Wno-error=format= -DHAVE_CONFIG_H
 
-COMPONENT_SRCDIRS := ./ ./rtu ./port ./functions
-COMPONENT_PRIV_INCLUDEDIRS := include ./rtu ./port ./ascii
+COMPONENT_SRCDIRS := ./ ./rtu ./port ./functions ./tcp
+COMPONENT_PRIV_INCLUDEDIRS := include ./rtu ./port ./ascii ./tcp

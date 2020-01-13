@@ -58,7 +58,7 @@ PR_BEGIN_EXTERN_C
 #define MB_RTU_ENABLED (1)
 
 /*! \brief If Modbus TCP support is enabled. */
-#define MB_TCP_ENABLED (0)
+#define MB_TCP_ENABLED (1)
 
 /*! \brief config device type. */
 
